@@ -1,0 +1,6 @@
+a0~a7;  a2 holds 13
+call of and g are inline; call of f is inline in number 12; call of g is also inline during call of f in number 12
+0x630
+0x38
+He110 World;0x726c6400;no
+the value in a2;because there is no input parameter for y, y will use remaining value in a2 
