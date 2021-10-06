@@ -49,6 +49,16 @@ sys_sbrk(void)
   addr = myproc()->sz;
   if(growproc(n) < 0)
     return -1;
+  if(n>0){
+    u2k(myproc()->pagetable, myproc()->kpagetable, addr, addr+n);
+  }else{
+    for(int i = addr - PGSIZE; i >= addr + n; i -= PGSIZE){
+      uvmunmap(myproc()->kpagetable, i, 1, 0);
+    }
+  }
+  
+  
+  
   return addr;
 }
 
