@@ -296,6 +296,19 @@ fork(void)
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
 
+  for(int i=0; i<MAXVMA; i++)
+  {
+    struct VMA *v=&p->vma[i];
+    struct VMA *nv=&np->vma[i];
+    if(v->used)
+    {
+      memmove(nv,v,sizeof(struct VMA)); 
+	    filedup(nv->f);
+    }
+  }
+
+
+
   safestrcpy(np->name, p->name, sizeof(p->name));
 
   pid = np->pid;
@@ -352,6 +365,18 @@ exit(int status)
       p->ofile[fd] = 0;
     }
   }
+
+
+  for(int i=0; i<MAXVMA; i++)
+  {
+    struct VMA *v=&p->vma[i];
+    if(v->used)
+    {
+      uvmunmap(p->pagetable,v->addr,v->len / PGSIZE,0);
+      memset(v,0,sizeof(struct VMA)); 
+    }
+  }
+
 
   begin_op();
   iput(p->cwd);
